@@ -1,0 +1,1 @@
+package com.tecsup.dto; import jakarta.validation.constraints.*; public record ProductoRequest(@NotBlank String nombre, @Positive Double precio, @PositiveOrZero Integer stock, @NotNull Long categoriaId) {}

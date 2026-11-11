@@ -1,0 +1,18 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: producto-service
+  datasource:
+    url: jdbc:h2:file:./data/producto-service;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password: ''
+  jpa:
+    hibernate:
+      ddl-auto: update
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
