@@ -14,6 +14,10 @@ Desde la raíz, ejecutar `mvn clean package`. Después, iniciar en este orden co
 
 Para Docker, primero ejecutar `mvn clean package` y después `docker compose -f compose.yaml up --build`. Compose asigna los JAR ya compilados y conecta cada servicio con Eureka por nombre.
 
+## Postman
+
+Importar `postman/GLAB-S12-Microservicios.postman_collection.json` y, opcionalmente, `postman/GLAB-S12-Local.postman_environment.json`. Seleccionar el entorno local y ejecutar las solicitudes en orden; las solicitudes de creación guardan automáticamente los IDs para las siguientes. La última carpeta elimina los datos creados y es opcional.
+
 ## Prueba de punta a punta
 
 Crear una categoría, cliente y producto antes del pedido. Utilizar los IDs devueltos en lugar de asumir que sean 1.

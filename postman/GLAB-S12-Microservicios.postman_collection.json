@@ -1,0 +1,696 @@
+{
+  "info": {
+    "_postman_id": "7ba53842-3124-4b91-9030-000000000012",
+    "name": "GLAB S12 - Microservicios Spring Boot",
+    "description": "Colección del laboratorio: Eureka, categorías, clientes, productos y pedidos integrados con OpenFeign. Ejecútese en orden, de arriba hacia abajo.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00 - Eureka",
+      "item": [
+        {
+          "name": "Consultar panel de Eureka",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{eurekaUrl}}",
+            "description": "Debe mostrar los servicios registrados después de iniciarlos."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "01 - Categoría",
+      "item": [
+        {
+          "name": "Crear categoría",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{categoriaUrl}}/api/categorias",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Tecnología\",\n  \"estado\": \"ACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Estado esperado\",()=>pm.response.to.have.status(201));",
+                  "const j=pm.response.json();",
+                  "pm.test(\"Devuelve identificador\",()=>pm.expect(j.id).to.exist);",
+                  "pm.environment.set(\"categoriaId\",j.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar categorías",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{categoriaUrl}}/api/categorias",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar categoría creada",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{categoriaUrl}}/api/categorias/{{categoriaId}}",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validar categoría incompleta (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{categoriaUrl}}/api/categorias",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\",\n  \"estado\": \"ACTIVO\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\",()=>pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "02 - Cliente",
+      "item": [
+        {
+          "name": "Crear cliente",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{clienteUrl}}/api/clientes",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellidos\": \"Ramirez\",\n  \"direccion\": \"Lima\",\n  \"estado\": \"ACTIVO\",\n  \"nroDni\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Estado esperado\",()=>pm.response.to.have.status(201));",
+                  "const j=pm.response.json();",
+                  "pm.test(\"Devuelve identificador\",()=>pm.expect(j.id).to.exist);",
+                  "pm.environment.set(\"clienteId\",j.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar clientes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{clienteUrl}}/api/clientes",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar cliente creado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{clienteUrl}}/api/clientes/{{clienteId}}",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validar DNI con longitud incorrecta (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{clienteUrl}}/api/clientes",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Ana\",\n  \"apellidos\": \"Diaz\",\n  \"direccion\": \"Lima\",\n  \"estado\": \"ACTIVO\",\n  \"nroDni\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\",()=>pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Actualizar cliente",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{clienteUrl}}/api/clientes/{{clienteId}}",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Carlos\",\n  \"apellidos\": \"Ramirez\",\n  \"direccion\": \"Lima Metropolitana\",\n  \"estado\": \"ACTIVO\",\n  \"nroDni\": \"12345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "03 - Producto",
+      "item": [
+        {
+          "name": "Crear producto",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{productoUrl}}/api/productos",
+            "description": "Ejemplo del documento. Usa el ID de categoría que creó la primera solicitud.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Laptop\",\n  \"precio\": 2500,\n  \"stock\": 10,\n  \"categoriaId\": \"{{categoriaId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Estado esperado\",()=>pm.response.to.have.status(201));",
+                  "const j=pm.response.json();",
+                  "pm.test(\"Devuelve identificador\",()=>pm.expect(j.id).to.exist);",
+                  "pm.environment.set(\"productoId\",j.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{productoUrl}}/api/productos",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar producto creado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{productoUrl}}/api/productos/{{productoId}}",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar producto con categoría (Feign)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{productoUrl}}/api/productos/{{productoId}}/detalle",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validar precio cero (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{productoUrl}}/api/productos",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Teclado\",\n  \"precio\": 0,\n  \"stock\": 3,\n  \"categoriaId\": \"{{categoriaId}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\",()=>pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "04 - Pedido y comunicación Feign",
+      "item": [
+        {
+          "name": "Registrar pedido",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{pedidoUrl}}/api/pedidos",
+            "description": "Guarda IDs y consulta cliente y producto por OpenFeign.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"productoId\": \"{{productoId}}\",\n  \"cantidad\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Estado esperado\",()=>pm.response.to.have.status(201));",
+                  "const j=pm.response.json();",
+                  "pm.test(\"Devuelve identificador\",()=>pm.expect(j.id).to.exist);",
+                  "pm.environment.set(\"pedidoId\",j.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Consultar pedido enriquecido",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{pedidoUrl}}/api/pedidos/{{pedidoId}}",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));",
+                  "const j=pm.response.json();",
+                  "pm.test(\"Incluye cliente y producto\",()=>{pm.expect(j.cliente).to.exist;pm.expect(j.producto).to.exist;});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Listar pedidos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{pedidoUrl}}/api/pedidos",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Cambiar estado a atendido",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{pedidoUrl}}/api/pedidos/{{pedidoId}}/estado?valor=ATENDIDO",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 200\",()=>pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validar cantidad cero (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{pedidoUrl}}/api/pedidos",
+            "description": "",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"clienteId\": \"{{clienteId}}\",\n  \"productoId\": \"{{productoId}}\",\n  \"cantidad\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 400\",()=>pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pedido inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{pedidoUrl}}/api/pedidos/999999999",
+            "description": ""
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 404\",()=>pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "05 - Limpieza opcional (borra datos)",
+      "description": "Ejecutar solo al final. Elimina los recursos usados por las pruebas.",
+      "item": [
+        {
+          "name": "Eliminar producto creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{productoUrl}}/api/productos/{{productoId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\",()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar cliente creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{clienteUrl}}/api/clientes/{{clienteId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\",()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Eliminar categoría creada",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{categoriaUrl}}/api/categorias/{{categoriaId}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"HTTP 204\",()=>pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "eurekaUrl",
+      "value": "http://localhost:8761"
+    },
+    {
+      "key": "categoriaUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "productoUrl",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "clienteUrl",
+      "value": "http://localhost:8084"
+    },
+    {
+      "key": "pedidoUrl",
+      "value": "http://localhost:8085"
+    },
+    {
+      "key": "categoriaId",
+      "value": ""
+    },
+    {
+      "key": "clienteId",
+      "value": ""
+    },
+    {
+      "key": "productoId",
+      "value": ""
+    },
+    {
+      "key": "pedidoId",
+      "value": ""
+    }
+  ]
+}
